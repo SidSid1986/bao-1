@@ -24,14 +24,17 @@ const formatFetch = (url, params) => {
 
   /** 整合参数 val */
   let valStr = url
-  Object.values({ user: 'null', data, token: 'null', key: 'null', time }).forEach(e => {
+  const user = sessionStorage.getItem('user') || 'null'
+  const token = sessionStorage.getItem('token') || 'null'
+  const prekey = sessionStorage.getItem('prkey') || 'null'
+  const md5Params = { user, data, token, prekey, time }
+
+  Object.values(md5Params).forEach(e => {
     valStr += e
   })
-
-  /** 对整合参数加密 */
   const key = md5(valStr)
 
-  return fetch.get(`/${url}?user=null&data=${data}&token=null&key=${key}&time=${time}`)
+  return fetch.get(`/${url}?user=${user}&data=${data}&token=${token}&key=${key}&time=${time}`)
 }
 
 export default (url, params) => formatFetch(url, params)

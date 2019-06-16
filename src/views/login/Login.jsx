@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import Particles from 'reactparticles.js'
 import { Form, Input, Button, Icon } from 'antd'
 import fetch from '../../plugins/axios'
@@ -8,16 +8,16 @@ import ContactIcon from '../../components/login/ContactIcon'
 import './login.css'
 
 function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
+  return Object.keys(fieldsError).some(field => fieldsError[field])
 }
 
 function renderContact(contact) {
   return Object.keys(contact).map(e => ContactIcon({ type: e, content: contact[e], color: '#1890ff' }))
 }
 
-class Login extends PureComponent {
+class Login extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       contact: {
         qq: '',
@@ -30,27 +30,30 @@ class Login extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.form.validateFields();
+    this.props.form.validateFields()
     this.getContactWay()
   }
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
         this.setState({ loading: true })
         try {
           // testbbb dede123
-          await fetch('Login', values)
-          const { history: { push } } = this.props
-          push('/dashboard')
-        } catch (error) {
-          console.log(error)
-        } finally {
+          const { prkey, user, token } = await fetch('Login', values)
           this.setState({ loading: false })
+          sessionStorage.setItem('prkey', prkey)
+          sessionStorage.setItem('user', user)
+          sessionStorage.setItem('token', token)
+          const { history: { push } } = this.props
+          push('/dashboard/readOrder')
+        } catch (error) {
+          this.setState({ loading: false })
+          console.log(error)
         }
       }
-    });
+    })
   }
 
   async getContactWay() {
@@ -71,10 +74,10 @@ class Login extends PureComponent {
 
 
   render() {
-    const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+    const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form
 
-    const usernameError = isFieldTouched('user') && getFieldError('user');
-    const passwordError = isFieldTouched('pwd') && getFieldError('password');
+    const usernameError = isFieldTouched('user') && getFieldError('user')
+    const passwordError = isFieldTouched('pwd') && getFieldError('password')
 
     const { contact, loading } = this.state
     const Contact = renderContact(contact)
@@ -121,4 +124,4 @@ class Login extends PureComponent {
   }
 }
  
-export default Form.create({ name: 'login' })(Login);
+export default Form.create({ name: 'login' })(Login)

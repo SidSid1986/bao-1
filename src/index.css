@@ -24,3 +24,8 @@ ul {
 li {
   list-style: none;
 }
+
+.simulationA {
+  color: #1890ff;
+  cursor: pointer;
+}

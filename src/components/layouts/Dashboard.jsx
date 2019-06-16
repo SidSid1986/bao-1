@@ -3,8 +3,9 @@ import { Route } from 'react-router-dom'
 import { Layout } from 'antd'
 
 import SideMenu from './SideMenu.js'
+import TopHeader from './TopHeader'
 
-import Test from '../../views/dashboard/Test'
+import ReadOrder from '../../views/dashboard/ReadOrder'
 
 const { Content } = Layout
 
@@ -16,10 +17,11 @@ class Dashboard extends Component {
   render() { 
     return (
     <Layout style={{ height: '100%' }}>
-      <SideMenu />
+      <SideMenu/>
       <Layout>
+        <TopHeader/>
         <Content style={{ margin: '24px 16px 0' }}>
-          <Route component={Test} path="/dashboard/test" />
+          <Route component={ReadOrder} path="/dashboard/readOrder" />
         </Content>
       </Layout>
     </Layout> 
