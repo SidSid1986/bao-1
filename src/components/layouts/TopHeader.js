@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Layout, Row, Col, Avatar, Dropdown, Icon } from 'antd'
 
 import DropMenu from './Header/DropMenu'
-import RechargeModal from './Header/RechargeModal.js'
+import RechargeModal from './Header/RechargeModal'
 import CurrentBalance from './Header/CurrentBalance'
 
 const { Header } = Layout
