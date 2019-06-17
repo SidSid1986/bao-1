@@ -5,9 +5,9 @@ import moment from 'moment'
 import fetch from '../../plugins/axios'
 
 const tableColumne = [
-  { title: '账号', align: 'center', dataIndex: 'account', key: 'account' },
-  { title: '登录时间', align: 'center', dataIndex: 'login_time', key: 'login_time' },
-  { title: '登录IP', align: 'center', dataIndex: 'login_ip', key: 'login_ip' }
+  { title: '账号', align: 'center', dataIndex: 'account' },
+  { title: '登录时间', align: 'center', dataIndex: 'login_time' },
+  { title: '登录IP', align: 'center', dataIndex: 'login_ip' }
 ]
 
 class LoginLog extends Component {
@@ -37,11 +37,10 @@ class LoginLog extends Component {
         this.setState({ loading: true })
         try {
           const { data, max, page: current } = await fetch('FKSelectLogin', { ...values, page })
-          const formatData = data.map((e, i) => {
+          const formatData = data.map((e, index) => {
             const account = `${e[0]}(${e[1]})`
             const login_time = moment(e[2] * 1000).format('YYYY-MM-DD hh:mm:ss') || '-'
             const login_ip = e[3]
-            const index = i
             return { account, login_time, login_ip, index }
           })
           this.setState(state => {

@@ -19,10 +19,6 @@ class RechargeModal extends Component {
     }
   }
 
-  componentDidMount() {
-    console.log(this.props)
-  }
-
   onSubmit = () => {
     const {
       form: { validateFields, resetFields },

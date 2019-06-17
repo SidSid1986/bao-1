@@ -74,7 +74,7 @@ class Read extends Component {
                 initialValue: 1,
                 rules: [{ required: true, message: '请选择模式~' }]
               })(
-                <Select>
+                <Select dropdownMatchSelectWidth={false}>
                   {OptionItems()}
                 </Select>
               )

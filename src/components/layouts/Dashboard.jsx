@@ -7,6 +7,7 @@ import TopHeader from './TopHeader'
 
 import ReadOrder from '../../views/dashboard/ReadOrder'
 import LoginLog from '../../views/dashboard/LoginLog'
+import FinanceDetails from '../../views/dashboard/FinanceDetails'
 
 const { Content } = Layout
 
@@ -24,6 +25,7 @@ class Dashboard extends Component {
         <Content style={{ margin: '24px 16px 0' }}>
           <Route component={ReadOrder} path="/dashboard/readOrder" />
           <Route component={LoginLog} path="/dashboard/loginLog" />
+          <Route component={FinanceDetails} path="/dashboard/financeDetails" />
         </Content>
       </Layout>
     </Layout> 
