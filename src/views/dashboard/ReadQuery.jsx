@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Table, Form, Input, Button } from 'antd'
+import { Table, Form, Input, Button, DatePicker } from 'antd'
 
 import SelectForm from '../../components/form/SelectForm'
 import fetch from '../../plugins/axios'
-import timeTransform from '../../utils/timeTransform'
+import { timeParser, timeStamp } from '../../utils/timeTransform'
 
 const tableColumne = [
   { title: '文章地址', align: 'center', dataIndex: 'url' },
@@ -62,12 +62,18 @@ class ReadQuery extends Component {
       if (!err) {
         this.setState({ loading: true })
         try {
-          const { data, max, page: current } = await fetch('FKSelectTask', { ...values, page })
+          const { start, end } = values
+          const { data, max, page: current } = await fetch('FKSelectTask', {
+            ...values,
+            start: timeStamp(start),
+            end: timeStamp(end),
+            page
+          })
           const formatData = data.map((e, index) => {
             const url = e[0]
             const title = e[1]
-            const create_time = timeTransform(e[2] * 1000)
-            const end_time = timeTransform(e[3] * 1000)
+            const create_time = timeParser(e[2] * 1000)
+            const end_time = timeParser(e[3] * 1000)
             const count = e[4]
             const start_count = e[5]
             const finish_count = e[6]
@@ -115,13 +121,7 @@ class ReadQuery extends Component {
       <>
         <Form layout="inline" onSubmit={this.onSubmit}>
           <Form.Item label="链接或标题">
-            {
-              getFieldDecorator('url', {
-                initialValue: ''
-              })(
-                <Input />
-              )
-            }
+            {getFieldDecorator('url', { initialValue: '' })(<Input />)}
           </Form.Item>
 
           <SelectForm
@@ -137,6 +137,14 @@ class ReadQuery extends Component {
             config={selectOrderConfig}
             getFieldDecorator={getFieldDecorator}
           />
+
+          <Form.Item>
+            {getFieldDecorator('start')(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+          </Form.Item>
+
+          <Form.Item>
+            {getFieldDecorator('end')(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+          </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading}>查询</Button>

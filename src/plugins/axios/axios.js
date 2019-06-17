@@ -30,7 +30,7 @@ fetch.interceptors.response.use(
         content: msg,
         onOk: () => {
           sessionStorage.clear()
-          window.location.replace('/login')
+          window.location.replace('/')
         }
       })
       return Promise.reject(msg)

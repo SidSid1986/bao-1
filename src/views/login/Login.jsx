@@ -72,7 +72,7 @@ class Login extends Component {
         servertime,
         yzm: { idx, pic } 
       } = await fetch('GetQQWX', {})
-      localStorage.setItem('system_time', servertime)
+      sessionStorage.setItem('system_time', servertime)
       this.setState({
         contact: {
           qq: QQ,

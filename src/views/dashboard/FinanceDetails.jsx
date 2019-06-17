@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Table, Form, Button } from 'antd'
+import { Table, Form, Button, DatePicker } from 'antd'
 
 import SelectForm from '../../components/form/SelectForm'
 import fetch from '../../plugins/axios'
-import timeTransform from '../../utils/timeTransform'
+import { timeParser, timeStamp } from '../../utils/timeTransform'
 
 const tableColumne = [
   { title: '类型', align: 'center', dataIndex: 'type', render: type => selectTypeConfig.find(e => +type === e.key).val || '-' },
@@ -55,10 +55,16 @@ class FinanceDetails extends Component {
       if (!err) {
         this.setState({ loading: true })
         try {
-          const { data, max, page: current } = await fetch('FKSelectGold', { ...values, page })
+          const { start, end } = values
+          const { data, max, page: current } = await fetch('FKSelectGold', {
+            ...values,
+            start: timeStamp(start),
+            end: timeStamp(end),
+            page
+          })
           const formatData = data.map((e, index) => {
             const type = e[0]
-            const change_time = timeTransform(e[1] * 1000)
+            const change_time = timeParser(e[1] * 1000)
             const origin = e[2]
             const change = e[3]
             const newest = e[4]
@@ -103,6 +109,14 @@ class FinanceDetails extends Component {
             config={selectOrderConfig}
             getFieldDecorator={getFieldDecorator}
           />
+
+          <Form.Item>
+            {getFieldDecorator('start')(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+          </Form.Item>
+
+          <Form.Item>
+            {getFieldDecorator('end')(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+          </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading}>查询</Button>

@@ -63,7 +63,7 @@ class Read extends Component {
                   { required: true, message: '请输入阅读量~' }
                 ]
               })(
-                <InputNumber placeholder="阅读量" />
+                <InputNumber placeholder="阅读量" min={0} />
               )
             }
           </Form.Item>

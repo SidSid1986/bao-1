@@ -2,6 +2,7 @@ import { fetch } from './axios'
 import md5 from 'md5'
 
 const formatFetch = (url, params) => {
+  console.log(params)
   /**
    * @author Cyan
    * @param {String} url 请求地址
