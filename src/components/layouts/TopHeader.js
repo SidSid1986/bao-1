@@ -3,7 +3,7 @@ import { Layout, Row, Col, Avatar, Dropdown, Icon } from 'antd'
 
 import DropMenu from './Header/DropMenu'
 import RechargeModal from './Header/RechargeModal.js'
-import CurrentBalance from './Header/CurrentBalance.js'
+import CurrentBalance from './Header/CurrentBalance'
 
 const { Header } = Layout
 const user = sessionStorage.getItem('user')
