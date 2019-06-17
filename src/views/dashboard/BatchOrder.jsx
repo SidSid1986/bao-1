@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
-class AccountRecharge extends Component {
+class BatchOrder extends Component {
   constructor(props) {
     super(props)
     this.state = {}
   }
   render() {
-    return ()
+    return <div>批量下单</div>
   }
 }
 
-export default AccountRecharge
+export default BatchOrder

@@ -1,18 +1,25 @@
 import React, { Component } from 'react'
 import { Table, Form, Input, Button } from 'antd'
-import moment from 'moment'
 
 import SelectForm from '../../components/form/SelectForm'
 import fetch from '../../plugins/axios'
+import timeTransform from '../../utils/timeTransform'
 
 const tableColumne = [
-  { title: '账号', align: 'center', dataIndex: 'account' },
-  { title: '登录时间', align: 'center', dataIndex: 'login_time' },
-  { title: '登录IP', align: 'center', dataIndex: 'login_ip' }
+  { title: '文章地址', align: 'center', dataIndex: 'url' },
+  { title: '标题', align: 'center', dataIndex: 'title' },
+  { title: '创建时间', align: 'center', dataIndex: 'create_time' },
+  { title: '结束时间', align: 'center', dataIndex: 'end_time' },
+  { title: '数量', align: 'center', dataIndex: 'count' },
+  { title: '开始数量', align: 'center', dataIndex: 'start_count' },
+  { title: '已刷数量', align: 'center', dataIndex: 'finish_count' },
+  { title: '订单类型', align: 'center', dataIndex: 'type' },
+  { title: '订单总价', align: 'center', dataIndex: 'total' },
+  { title: '订单状态', align: 'center', dataIndex: 'status' },
 ]
 
 const selectTypeConfig = [
-  { key: -1, val: '无' },
+  { key: 0, val: '无' },
   { key: 1, val: '标准模式' },
   { key: 2, val: '秒单模式' },
   { key: 3, val: '夜单模式' }
@@ -36,7 +43,7 @@ class ReadQuery extends Component {
       tableData: [],
       loading: false,
       pagination: {
-        current: 0,
+        current: 1,
         pageSize: 20,
         hideOnSinglePage: true
       }
@@ -47,7 +54,7 @@ class ReadQuery extends Component {
     this.onSubmit('', current)
   }
 
-  onSubmit = (e, page = 0) => {
+  onSubmit = (e, page = 1) => {
     e && e.preventDefault()
 
     const { validateFields } = this.props.form
@@ -55,24 +62,42 @@ class ReadQuery extends Component {
       if (!err) {
         this.setState({ loading: true })
         try {
-          const { data, max, page: current } = await fetch('FKSelectLogin', { ...values, page })
-          console.log(data)
-          // const formatData = data.map((e, index) => {
-          //   const account = `${e[0]}(${e[1]})`
-          //   const login_time = moment(e[2] * 1000).format('YYYY-MM-DD hh:mm:ss') || '-'
-          //   const login_ip = e[3]
-          //   return { account, login_time, login_ip, index }
-          // })
-          // this.setState(state => {
-          //   state.tableData = formatData
-          //   state.pagination = {
-          //     ...state.pagination,
-          //     current,
-          //     total: max * formatData.length,
-          //     pageSize: formatData.length
-          //   }
-          //   return state
-          // })
+          const { data, max, page: current } = await fetch('FKSelectTask', { ...values, page })
+          const formatData = data.map((e, index) => {
+            const url = e[0]
+            const title = e[1]
+            const create_time = timeTransform(e[2] * 1000)
+            const end_time = timeTransform(e[3] * 1000)
+            const count = e[4]
+            const start_count = e[5]
+            const finish_count = e[6]
+            const type = e[7]
+            const total = e[8]
+            const status = e[9]
+            return {
+              url,
+              title,
+              create_time,
+              end_time,
+              count,
+              start_count,
+              finish_count,
+              type,
+              total,
+              status,
+              index
+            }
+          })
+          this.setState(state => {
+            state.tableData = formatData
+            state.pagination = {
+              ...state.pagination,
+              current,
+              total: max * formatData.length,
+              pageSize: formatData.length
+            }
+            return state
+          })
         } catch (error) {
           console.log(error)
         } finally {
@@ -92,7 +117,7 @@ class ReadQuery extends Component {
           <Form.Item label="链接或标题">
             {
               getFieldDecorator('url', {
-                rules: [{ required: true, message: '请填入链接或标题~' }]
+                initialValue: ''
               })(
                 <Input />
               )

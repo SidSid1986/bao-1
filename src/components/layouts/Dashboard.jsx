@@ -9,6 +9,7 @@ import ReadOrder from '../../views/dashboard/ReadOrder'
 import LoginLog from '../../views/dashboard/LoginLog'
 import FinanceDetails from '../../views/dashboard/FinanceDetails'
 import ReadQuery from '../../views/dashboard/ReadQuery'
+import BatchOrder from '../../views/dashboard/BatchOrder'
 
 const { Content } = Layout
 
@@ -28,6 +29,7 @@ class Dashboard extends Component {
           <Route component={LoginLog} path="/dashboard/loginLog" />
           <Route component={FinanceDetails} path="/dashboard/financeDetails" />
           <Route component={ReadQuery} path="/dashboard/readQuery" />
+          <Route component={BatchOrder} path="/dashboard/batchOrder" />
         </Content>
       </Layout>
     </Layout> 

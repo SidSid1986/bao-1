@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Table, Form, Button } from 'antd'
-import moment from 'moment'
 
 import SelectForm from '../../components/form/SelectForm'
 import fetch from '../../plugins/axios'
+import timeTransform from '../../utils/timeTransform'
 
 const tableColumne = [
   { title: '类型', align: 'center', dataIndex: 'type', render: type => selectTypeConfig.find(e => +type === e.key).val || '-' },
@@ -14,7 +14,7 @@ const tableColumne = [
 ]
 
 const selectTypeConfig = [
-  { key: -1, val: '无' },
+  { key: 0, val: '无' },
   { key: 1, val: '系统充值' },
   { key: 2, val: '充值赠送' },
   { key: 3, val: '管理扣除' },
@@ -58,7 +58,7 @@ class FinanceDetails extends Component {
           const { data, max, page: current } = await fetch('FKSelectGold', { ...values, page })
           const formatData = data.map((e, index) => {
             const type = e[0]
-            const change_time = moment(e[1] * 1000).format('YYYY-MM-DD hh:mm:ss') || '-'
+            const change_time = timeTransform(e[1] * 1000)
             const origin = e[2]
             const change = e[3]
             const newest = e[4]

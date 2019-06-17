@@ -21,9 +21,10 @@ class Login extends Component {
     this.state = {
       contact: {
         qq: '',
-        wechat: '',
-        ie: ''
+        wechat: ''
       },
+      idx: '',
+      pic: '',
       loading: false
     }
     this.getContactWay = this.getContactWay.bind(this)
@@ -41,11 +42,18 @@ class Login extends Component {
         this.setState({ loading: true })
         try {
           // testbbb dede123
-          const { prkey, user, token } = await fetch('Login', values)
-          this.setState({ loading: false })
+          const { idx } = this.state
+          const { yzm } = values
+          const {
+            prkey,
+            user,
+            token
+          } = await fetch('Login', { ...values, yzm: { yzm, idx } })
+
           sessionStorage.setItem('prkey', prkey)
           sessionStorage.setItem('user', user)
           sessionStorage.setItem('token', token)
+
           const { history: { push } } = this.props
           push('/dashboard/readOrder')
         } catch (error) {
@@ -58,14 +66,20 @@ class Login extends Component {
 
   async getContactWay() {
     try {
-      const { QQ, WX, servertime, upurl } = await fetch('GetQQWX', {})
+      const {
+        QQ,
+        WX,
+        servertime,
+        yzm: { idx, pic } 
+      } = await fetch('GetQQWX', {})
       localStorage.setItem('system_time', servertime)
       this.setState({
         contact: {
           qq: QQ,
-          wechat: WX,
-          ie: upurl
-        }
+          wechat: WX
+        },
+        idx,
+        pic
       })
     } catch (error) {
       console.log(error)
@@ -79,7 +93,7 @@ class Login extends Component {
     const usernameError = isFieldTouched('user') && getFieldError('user')
     const passwordError = isFieldTouched('pwd') && getFieldError('password')
 
-    const { contact, loading } = this.state
+    const { contact, loading, pic } = this.state
     const Contact = renderContact(contact)
 
     return (
@@ -101,6 +115,16 @@ class Login extends Component {
                 rules: [{ required: true, message: '请输入密码!' }],
               })(
                 <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" />
+              )}
+            </Form.Item>
+
+            { pic ? <img src={`data:image/jpg;base64,${pic}`} alt="验证码" title="验证码" /> : null }
+
+            <Form.Item label="验证码" validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
+              {getFieldDecorator('yzm', {
+                rules: [{ required: true, message: '请输入验证码!' }],
+              })(
+                <Input prefix={<Icon type="security-scan" style={{ color: 'rgba(0,0,0,.25)' }} />} />
               )}
             </Form.Item>
 
