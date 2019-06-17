@@ -9,7 +9,7 @@ const createOption = config => {
   })
 }
 
-const FinanceSelect = ({ model, label, config, getFieldDecorator }) => {
+const SelectForm = ({ model, label, config, getFieldDecorator }) => {
   return (
     <Form.Item label={label}>
       {
@@ -26,4 +26,4 @@ const FinanceSelect = ({ model, label, config, getFieldDecorator }) => {
   )
 }
 
-export default FinanceSelect
+export default SelectForm

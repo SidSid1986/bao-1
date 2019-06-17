@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Table, Form, Button } from 'antd'
 import moment from 'moment'
 
-import FinanceSelect from '../../components/finance/FinanceSelect'
+import SelectForm from '../../components/form/SelectForm'
 import fetch from '../../plugins/axios'
 
 const tableColumne = [
@@ -90,14 +90,14 @@ class FinanceDetails extends Component {
     return (
       <>
         <Form layout="inline" onSubmit={this.onSubmit}>
-          <FinanceSelect
+          <SelectForm
             model="type"
             label="明细类型"
             config={selectTypeConfig}
             getFieldDecorator={getFieldDecorator}
           />
 
-          <FinanceSelect
+          <SelectForm
             model="order"
             label="排序方式"
             config={selectOrderConfig}

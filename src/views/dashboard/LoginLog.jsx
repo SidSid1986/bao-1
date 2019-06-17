@@ -72,7 +72,7 @@ class LoginLog extends Component {
           <Form.Item label="IP地址">
             {
               getFieldDecorator('ip', {
-                rules: [{ required: true, message: '请填入IP地址' }]
+                rules: [{ required: true, message: '请填入IP地址~' }]
               })(
                 <Input />
               )
