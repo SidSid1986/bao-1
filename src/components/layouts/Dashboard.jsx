@@ -6,6 +6,7 @@ import SideMenu from './SideMenu.js'
 import TopHeader from './TopHeader'
 
 import ReadOrder from '../../views/dashboard/ReadOrder'
+import LoginLog from '../../views/dashboard/LoginLog'
 
 const { Content } = Layout
 
@@ -22,6 +23,7 @@ class Dashboard extends Component {
         <TopHeader/>
         <Content style={{ margin: '24px 16px 0' }}>
           <Route component={ReadOrder} path="/dashboard/readOrder" />
+          <Route component={LoginLog} path="/dashboard/loginLog" />
         </Content>
       </Layout>
     </Layout> 
