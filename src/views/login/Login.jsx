@@ -27,12 +27,12 @@ class Login extends Component {
       pic: '',
       loading: false
     }
-    this.getContactWay = this.getContactWay.bind(this)
   }
 
   componentDidMount() {
     this.props.form.validateFields()
     this.getContactWay()
+    sessionStorage.clear()
   }
 
   onSubmit = e => {
@@ -57,6 +57,7 @@ class Login extends Component {
           const { history: { push } } = this.props
           push('/dashboard/readOrder')
         } catch (error) {
+          this.getContactWay()
           this.setState({ loading: false })
           console.log(error)
         }
@@ -64,7 +65,7 @@ class Login extends Component {
     })
   }
 
-  async getContactWay() {
+  getContactWay = async() => {
     try {
       const {
         QQ,
@@ -118,7 +119,7 @@ class Login extends Component {
               )}
             </Form.Item>
 
-            { pic ? <img src={`data:image/jpg;base64,${pic}`} alt="验证码" title="验证码" /> : null }
+            { pic ? <img src={`data:image/jpg;base64,${pic}`} alt="验证码" title="验证码" onClick={this.getContactWay} /> : null }
 
             <Form.Item label="验证码" validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
               {getFieldDecorator('yzm', {
