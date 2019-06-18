@@ -4,11 +4,14 @@ import { Table, Form, Input, Button, DatePicker } from 'antd'
 import fetch from '../../plugins/axios'
 import { timeStamp, timeParser } from '../../utils/timeTransform'
 
+const { RangePicker } = DatePicker
+
 const tableColumne = [
   { title: '账号', align: 'center', dataIndex: 'account' },
   { title: '昵称', align: 'center', dataIndex: 'nickname' },
-  { title: '登录时间', align: 'center', dataIndex: 'login_time' },
-  { title: '登录IP', align: 'center', dataIndex: 'login_ip' }
+  { title: '登陆时间', align: 'center', dataIndex: 'login_time' },
+  { title: '登陆IP', align: 'center', dataIndex: 'login_ip' },
+  { title: '登陆地点', align: 'center', dataIndex: 'login_address' },
 ]
 
 class LoginLog extends Component {
@@ -37,11 +40,11 @@ class LoginLog extends Component {
       if (!err) {
         this.setState({ loading: true })
         try {
-          const { ip, start, end } = values
+          const { ip, timeRange } = values
           const { data, max, page: current } = await fetch('FKSelectLogin', {
             ip,
-            start: timeStamp(start),
-            end: timeStamp(end),
+            start: timeStamp(timeRange[0]),
+            end: timeStamp(timeRange[1]),
             page
           })
           const formatData = data.map((e, index) => {
@@ -49,7 +52,8 @@ class LoginLog extends Component {
             const nickname = e[1]
             const login_time = timeParser(e[2])
             const login_ip = e[3]
-            return { account, nickname, login_time, login_ip, index }
+            const login_address = e[4]
+            return { account, nickname, login_time, login_ip, index, login_address }
           })
           this.setState(state => {
             state.tableData = formatData
@@ -81,12 +85,12 @@ class LoginLog extends Component {
             {getFieldDecorator('ip', { initialValue: '' })(<Input />)}
           </Form.Item>
 
-          <Form.Item>
-            {getFieldDecorator('start')(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
-          </Form.Item>
-
-          <Form.Item>
-            {getFieldDecorator('end')(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+          <Form.Item label="登陆时间">
+            {
+              getFieldDecorator('timeRange', { initialValue: [] })(
+                <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )
+            }
           </Form.Item>
 
           <Form.Item>

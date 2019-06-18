@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { Layout, Row, Col, Avatar, Dropdown, Icon, Modal, Spin } from 'antd'
-import { inject, observer } from 'mobx-react'
+import { inject } from 'mobx-react'
 
 import DropMenu from './Header/DropMenu'
 import RechargeModal from './Header/RechargeModal'
 import CurrentBalance from './Header/CurrentBalance'
 import Contact from '../login/Contact'
 
+import { storage } from '../../utils/storage'
+
 const { Header } = Layout
-const nickname = sessionStorage.getItem('nickname')
+
+const nickname = storage.get('userInfo') && storage.get('userInfo').nickname
 
 const logoutModal = () => {
   Modal.confirm({
@@ -28,7 +31,7 @@ const TopHeader = ({ global }) => {
   
   const dropMenu = [
     { key: 'recharge', val: '充值', icon: 'dollar', callback: () => { setRechargeModalVisible(true) } },
-    { key: 'logout', val: '退出登录', icon: 'logout', callback: () => { logoutModal() } }
+    { key: 'logout', val: '退出登陆', icon: 'logout', callback: () => { logoutModal() } }
   ]
 
   return (
@@ -60,4 +63,4 @@ const TopHeader = ({ global }) => {
   )
 }
 
-export default inject('global')(observer(TopHeader))
+export default inject('global')(TopHeader)

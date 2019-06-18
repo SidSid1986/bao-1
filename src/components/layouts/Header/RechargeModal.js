@@ -3,6 +3,7 @@ import { Modal, Form, Input, message, Spin } from 'antd'
 import { inject } from 'mobx-react'
 
 import CurrentBalance from './CurrentBalance'
+import Contact from '../../login/Contact'
 
 import fetch from '../../../plugins/axios'
 import { amountFixed } from '../../../utils/numFixed'
@@ -11,7 +12,7 @@ const RechargeModal = ({ visible, onCancel, form, global }) => {
   const [loading, setLoading] = useState(false)
 
   const { getFieldDecorator, validateFields, resetFields } = form
-  const { setBalance } = global
+  const { setBalance, globalConfig: { service } } = global
 
   const onSubmit = () => {
     validateFields(async (err, values) => {
@@ -56,6 +57,8 @@ const RechargeModal = ({ visible, onCancel, form, global }) => {
             }
           </Form.Item>
         </Form>
+
+        <Contact service={service} />
       </Spin>
     </Modal>
   )

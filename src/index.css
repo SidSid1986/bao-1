@@ -29,3 +29,11 @@ li {
   color: #1890ff;
   cursor: pointer;
 }
+
+.red--text {
+  color: red;
+}
+
+.green--text {
+  color: greenyellow;
+}

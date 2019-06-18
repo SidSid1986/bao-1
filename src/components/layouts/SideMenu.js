@@ -9,7 +9,7 @@ const menu = [
   { key: 'batchOrder', val: '批量下单', icon: 'cluster' },
   { key: 'readQuery', val: '阅读查询', icon: 'file-search' },
   { key: 'financeDetails', val: '资金明细', icon: 'dollar' },
-  { key: 'loginLog', val: '登录日志', icon: 'solution' }
+  { key: 'loginLog', val: '登陆日志', icon: 'solution' }
 ]
 
 const SideMenu = props => {

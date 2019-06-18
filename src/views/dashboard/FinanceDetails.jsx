@@ -7,6 +7,8 @@ import fetch from '../../plugins/axios'
 import { amountFixed } from '../../utils/numFixed'
 import { timeParser, timeStamp } from '../../utils/timeTransform'
 
+const { RangePicker } = DatePicker
+
 const tableColumne = [
   { title: '类型', align: 'center', dataIndex: 'type', render: type => selectTypeConfig.find(e => +type === e.key).val || '-' },
   { title: '变动时间', align: 'center', dataIndex: 'change_time' },
@@ -57,11 +59,11 @@ class FinanceDetails extends Component {
       if (!err) {
         this.setState({ loading: true })
         try {
-          const { start, end } = values
+          const { timeRange } = values
           const { data, max, page: current } = await fetch('FKSelectGold', {
             ...values,
-            start: timeStamp(start),
-            end: timeStamp(end),
+            start: timeStamp(timeRange[0]),
+            end: timeStamp(timeRange[1]),
             page
           })
           const formatData = data.map((e, index) => {
@@ -112,12 +114,8 @@ class FinanceDetails extends Component {
             getFieldDecorator={getFieldDecorator}
           />
 
-          <Form.Item>
-            {getFieldDecorator('start')(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
-          </Form.Item>
-
-          <Form.Item>
-            {getFieldDecorator('end')(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+          <Form.Item label="变动时间">
+            {getFieldDecorator('timeRange', { initialValue: [] })(<RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
           </Form.Item>
 
           <Form.Item>

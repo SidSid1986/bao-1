@@ -144,7 +144,7 @@ class Login extends Component {
                 loading={loading}
                 disabled={hasErrors(getFieldsError())}
               >
-                登录
+                登陆
               </Button>
             </Form.Item>
           </Form>

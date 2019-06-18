@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject } from 'mobx-react'
-import { Spin, Form, Input, InputNumber, Select, Button, Row, Col, Icon, Modal } from 'antd'
+import { Spin, Form, Input, InputNumber, Select, Button, Row, Col, Icon, Modal, Alert, message } from 'antd'
 
 import fetch from '../../plugins/axios'
 import { numFixed, amountFixed } from '../../utils/numFixed'
@@ -42,6 +42,8 @@ class Read extends Component {
       model: 0,
       count: 0
     }
+    this.throttle = 0
+    this.throttleTimer = null
   }
 
   componentDidMount() {
@@ -93,23 +95,36 @@ class Read extends Component {
   }
 
   getNewestPrice = async () => {
-    this.setState({ loading: true })
-    try {
-      const { data } = await fetch('FKGetPrice', {})
-      data.forEach((e, i) => {
-        if (+modelConfig[i].key === +e[0]) {
-          modelConfig[i].switch = e[1]
-          modelConfig[i].minOrder = e[2]
-          modelConfig[i].maxOrder = e[3]
-          modelConfig[i].price = e[4]
-          modelConfig[i].exchange = amountFixed(e[4])
-          modelConfig[i].info = e[5]
-        }
-      })
-    } catch (error) {
-      console.log(error)
-    } finally {
-      this.setState({ model: 0, loading: false })
+    if (this.throttle < 3) {
+      this.throttle = this.throttle + 1
+      if (!this.throttleTimer) {
+        this.throttleTimer = setTimeout(() => {
+          this.throttle = 0
+          this.throttleTimer = null
+        }, 10000)
+      }
+
+      this.setState({ loading: true })
+      try {
+        const { data } = await fetch('FKGetPrice', {})
+        data.forEach((e, i) => {
+          if (+modelConfig[i].key === +e[0]) {
+            modelConfig[i].on_off = +e[1]
+            modelConfig[i].minOrder = e[2]
+            modelConfig[i].maxOrder = e[3]
+            modelConfig[i].price = e[4]
+            modelConfig[i].exchange = amountFixed(e[4])
+            modelConfig[i].info = e[5]
+          }
+        })
+        message.success('单价刷新成功~')
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.setState({ model: 0, loading: false })
+      }
+    } else {
+      message.info('请勿频繁刷新~')
     }
   }
 
@@ -117,7 +132,7 @@ class Read extends Component {
     const { getFieldDecorator } = this.props.form
     const { count, model, loading } = this.state
     const currentModel = modelConfig[model]
-    const { info, minOrder, maxOrder, exchange } = currentModel
+    const { info, minOrder, maxOrder, exchange, on_off } = currentModel
 
     return (
       <Spin spinning={loading}>
@@ -127,7 +142,7 @@ class Read extends Component {
               getFieldDecorator('url', {
                 rules: [{ required: true, message: '请输入文章链接~' }]
               })(
-                <Input placeholder="请输入文章链接" />
+                <Input placeholder="请输入文章链接" allowClear />
               )
             }
           </Form.Item>
@@ -138,11 +153,14 @@ class Read extends Component {
                 initialValue: 1, rules: [{ required: true, message: '请选择模式~' }]
               })(
                 <Select dropdownMatchSelectWidth={false} onSelect={e => this.handlerChange('model', e - 1)}>
-                  {OptionItems(modelConfig.filter(e => +e.on_off === 1))}
+                  {OptionItems(modelConfig)}
                 </Select>
               )
             }
-            <span>{info}</span>
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
+            <Alert message={info} type="warning" />
           </Form.Item>
 
           <Form.Item label="阅读量">
@@ -161,11 +179,14 @@ class Read extends Component {
                       min={+minOrder}
                       max={+maxOrder}
                       onChange={e => this.handlerChange('count', e)}
+                      disabled={!on_off}
                     />
                   )
                 }
               </Col>
-              <Col span={18}>可下单阅读量{minOrder}-{maxOrder}</Col>
+              {
+                on_off ? <Col span={18}>下单限制：{minOrder} - {maxOrder}</Col> : <Col span={18} className="red--text">暂停收单</Col>
+              }
             </Row>
               
           </Form.Item>
@@ -175,10 +196,14 @@ class Read extends Component {
               <Col span={6}>
                 <Input value={numFixed(exchange * count, 4)} disabled />
               </Col>
-              <Col span={18}>
-                <span style={{ marginRight: 10 }}>当前单价：{exchange}</span>
-                <Icon type="sync" onClick={this.getNewestPrice} />
-              </Col>
+              {
+                on_off ? 
+                <Col span={18}>
+                  <span style={{ marginRight: 10 }}>当前单价：{exchange}</span>
+                  <Icon type="sync" onClick={this.getNewestPrice} />
+                </Col>
+                : <Col span={18} className="red--text">不可下单</Col>
+              }
             </Row>
           </Form.Item>
 

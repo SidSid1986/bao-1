@@ -9,6 +9,8 @@ import { amountFixed } from '../../utils/numFixed'
 import { timeParser, timeStamp } from '../../utils/timeTransform'
 import { readQueryStatusParser } from '../../utils/tableParse'
 
+const { RangePicker } = DatePicker
+
 const startTime = moment().startOf('day')
 const endTime = moment().endOf('day')
 
@@ -72,11 +74,11 @@ class ReadQuery extends Component {
       if (!err) {
         this.setState({ loading: true })
         try {
-          const { start, end } = values
+          const { timeRange } = values
           const { data, max, page: current } = await fetch('FKSelectTask', {
             ...values,
-            start: timeStamp(start),
-            end: timeStamp(end),
+            start: timeStamp(timeRange[0]),
+            end: timeStamp(timeRange[1]),
             page
           })
           const formatData = data.map((e, index) => {
@@ -131,7 +133,7 @@ class ReadQuery extends Component {
 
     return (
       <>
-        <Form layout="inline" onSubmit={this.onSubmit}>
+        <Form layout="inline" onSubmit={this.onSubmit} >
           <Form.Item label="链接或标题">
             {getFieldDecorator('url', { initialValue: '' })(<Input allowClear />)}
           </Form.Item>
@@ -150,12 +152,12 @@ class ReadQuery extends Component {
             getFieldDecorator={getFieldDecorator}
           />
 
-          <Form.Item>
-            {getFieldDecorator('start', { initialValue: startTime })(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
-          </Form.Item>
-
-          <Form.Item>
-            {getFieldDecorator('end', { initialValue: endTime })(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+          <Form.Item label="创建时间">
+            {
+              getFieldDecorator('timeRange', { initialValue: [startTime, endTime] })(
+                <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )
+            }
           </Form.Item>
 
           <Form.Item>

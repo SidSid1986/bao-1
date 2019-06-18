@@ -13,7 +13,7 @@ let throttle = {
 }
 
 class Store {
-  @observable balance = null
+  @observable balance = storage.get('balance') || 0
   @observable globalConfig = {
     service: storage.get('service') || [],
     pic: ''
@@ -35,7 +35,7 @@ class Store {
       try {
         const { data } = await fetch('FKGetSelf', {})
         this.setBalance(data[0][1])
-        tip && message.success('刷新成功~')
+        tip && message.success('余额刷新成功~')
       } catch (error) {
         console.log(error)
       }
@@ -68,7 +68,7 @@ class Store {
         }
         storage.set({ idx })
         storage.set({ service })
-        tip && message.success('刷新成功~')
+        tip && message.success('客服刷新成功~')
       } catch (error) {
         console.log(error)
       }
@@ -78,7 +78,10 @@ class Store {
   }
 
   @action
-  setBalance = balance => this.balance = amountFixed(balance)
+  setBalance = balance => {
+    this.balance = amountFixed(balance) 
+    storage.set({ balance: this.balance })
+  }
 }
 
 export default Store
