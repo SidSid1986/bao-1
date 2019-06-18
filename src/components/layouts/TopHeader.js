@@ -35,7 +35,7 @@ const TopHeader = () => {
         <Col offset={1}>
           <Dropdown overlay={DropMenu(dropMenu)} getPopupContainer={() => document.querySelector('#header')} className="header-drop">
             <div className="simulationA">
-              <Avatar shape="square" icon="user" />
+              <Avatar shape="square" src="/images/avatar.jpg" />
               <span style={{ margin: '0 15px' }}>{user}</span>
               <Icon type="down" />
             </div>

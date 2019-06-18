@@ -5,6 +5,7 @@ import { inject, observer } from 'mobx-react'
 import CurrentBalance from './CurrentBalance'
 
 import fetch from '../../../plugins/axios'
+import { amountFixed } from '../../../utils/numFixed'
 
 const form = Comp => Form.create({ name: 'recharge_modal' })(Comp)
 
@@ -31,7 +32,7 @@ class RechargeModal extends Component {
           const { data } = await fetch('FKCZM', values)
           const rechargeAmount = data[0]
           const newBalance = data[3]
-          message.success(`恭喜您已成功充值${rechargeAmount},当前最新余额为${newBalance}`)
+          message.success(`恭喜您已成功充值${rechargeAmount},当前最新余额为${amountFixed(newBalance)}`)
           setBalance(newBalance)
         } catch (error) {
           console.log(error)
@@ -63,7 +64,7 @@ class RechargeModal extends Component {
               getFieldDecorator('code', {
                 rules: [{ required: true, message: '请填写充值码~' }]
               })(
-                <Input.TextArea rows={4} />
+                <Input />
               )
             }
           </Form.Item>

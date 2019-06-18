@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Menu, Layout, Icon } from 'antd'
 
@@ -13,14 +13,19 @@ const menu = [
 ]
 
 const SideMenu = props => {
+  const {
+    history: { push },
+    location: { pathname }
+  } = props
+
+  const pathParser = pathname.split('/')[2]
+
+  const [openKeys, setOpenKeys] = useState(pathParser || menu[0].key)
 
   const onClick = ({ key }) => {
-    const {
-      history: { push },
-      location: { pathname }
-    } = props
 
     if (!pathname.includes(key)) push(key)
+    setOpenKeys(key)
   }
 
   return (
@@ -28,8 +33,8 @@ const SideMenu = props => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={[menu[0].key]}
         onClick={onClick}
+        selectedKeys={[openKeys]}
       >
         {
           menu.map(e => {

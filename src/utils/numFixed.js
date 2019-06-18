@@ -1,4 +1,4 @@
-export default (num, bit = 2) => {
+export const numFixed = (num, bit = 2) => {
   /**
    * @author Cyan
    * @param {number | string} num 源数字
@@ -38,3 +38,5 @@ export default (num, bit = 2) => {
     }
   }
 }
+
+export const amountFixed = amount => numFixed(amount / 10000, 4)

@@ -3,14 +3,15 @@ import { Table, Form, Button, DatePicker } from 'antd'
 
 import SelectForm from '../../components/form/SelectForm'
 import fetch from '../../plugins/axios'
+import { amountFixed } from '../../utils/numFixed'
 import { timeParser, timeStamp } from '../../utils/timeTransform'
 
 const tableColumne = [
   { title: '类型', align: 'center', dataIndex: 'type', render: type => selectTypeConfig.find(e => +type === e.key).val || '-' },
   { title: '变动时间', align: 'center', dataIndex: 'change_time' },
-  { title: '原余额', align: 'center', dataIndex: 'origin' },
-  { title: '变动值', align: 'center', dataIndex: 'change' },
-  { title: '变动后', align: 'center', dataIndex: 'newest' }
+  { title: '原余额', align: 'center', dataIndex: 'origin', render: amount => amountFixed(amount) },
+  { title: '变动值', align: 'center', dataIndex: 'change', render: amount => amountFixed(amount) },
+  { title: '变动后', align: 'center', dataIndex: 'newest', render: amount => amountFixed(amount) }
 ]
 
 const selectTypeConfig = [

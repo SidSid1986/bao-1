@@ -37,7 +37,7 @@ fetch.interceptors.response.use(
     }
     
     infoModal({
-      title: '提示1',
+      title: '提示',
       content: msg
     })
     return Promise.reject(msg)

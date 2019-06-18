@@ -2,7 +2,7 @@ import { observable, action } from 'mobx'
 import { message } from 'antd'
 
 import fetch from '../plugins/axios'
-import numFixed from '../utils/numFixed'
+import { amountFixed } from '../utils/numFixed'
 
 let throttle = 0, throttleTimer = null
 
@@ -22,7 +22,7 @@ class Store {
 
       try {
         const { data } = await fetch('FKGetSelf', {})
-        this.balance = numFixed(data[0][1] / 10000, 4) || 0
+        this.balance = amountFixed(data[0][1])
       } catch (error) {
         console.log(error)
       }
@@ -32,7 +32,7 @@ class Store {
   }
 
   @action
-  setBalance = balance => this.balance = numFixed(balance / 10000, 4) || 0
+  setBalance = balance => this.balance = amountFixed(balance)
 }
 
 export default Store
