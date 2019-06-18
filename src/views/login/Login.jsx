@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import Particles from 'reactparticles.js'
 import { Form, Input, Button, Icon } from 'antd'
-import fetch from '../../plugins/axios'
 
 import ContactIcon from '../../components/login/ContactIcon'
+
+import fetch from '../../plugins/axios'
 
 import './login.css'
 

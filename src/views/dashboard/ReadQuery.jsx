@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
-import { Table, Form, Input, Button, DatePicker } from 'antd'
+import { Table, Form, Input, Button, DatePicker, Popconfirm, Icon } from 'antd'
 
 import SelectForm from '../../components/form/SelectForm'
+
 import fetch from '../../plugins/axios'
 import { timeParser, timeStamp } from '../../utils/timeTransform'
 import { readQueryStatusParser } from '../../utils/tableParse'
+import { clipboardHandler } from '../../utils/clipboard'
 
 const tableColumne = [
-  { title: '文章地址', align: 'center', dataIndex: 'url' },
+  { title: '文章地址', align: 'center', dataIndex: 'url', render: url => (
+    <Popconfirm title={'是否需要复制该文章地址'} icon={<Icon type="bulb" />} onConfirm={() => { clipboardHandler(url) }}>
+      <span className="simulationA">{url}</span>
+    </Popconfirm>
+  ) },
   { title: '标题', align: 'center', dataIndex: 'title' },
   { title: '创建时间', align: 'center', dataIndex: 'create_time' },
   { title: '结束时间', align: 'center', dataIndex: 'end_time' },
