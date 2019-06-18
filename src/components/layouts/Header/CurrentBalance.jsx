@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Spin } from 'antd'
+import { Icon } from 'antd'
 import { inject, observer } from 'mobx-react'
 
 @inject('global')
@@ -7,9 +7,6 @@ import { inject, observer } from 'mobx-react'
 class CurrentBalance extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      loading: false
-    }
     this.store = this.props.global
   }
 
@@ -18,22 +15,27 @@ class CurrentBalance extends Component {
   }
 
   refreshBalance = async () => {
-    const { balance, getBalance } = this.store
-    if (balance > 0) return
-    this.setState({ loading: true })
-    await getBalance()
-    this.setState({ loading: false })
+    const { loadingHandler } = this.props
+    const { getBalance } = this.store
+
+    loadingHandler(true)
+    try {
+      await getBalance()
+    } catch (error) {
+      console.log(error)
+    } finally {
+      loadingHandler(false)
+    }
   }
 
   render() {
-    const { loading } = this.state
     const { balance, getBalance } = this.store
 
     return (
-      <Spin spinning={loading}>
+      <div>
         <span style={{ marginRight: 10 }}>当前余额：{balance}</span>
         <Icon type="sync" onClick={() => { getBalance() }} />
-      </Spin>
+      </div>
     )
   }
 }

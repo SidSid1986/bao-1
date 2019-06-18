@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { Table, Form, Input, Button, DatePicker } from 'antd'
-import moment from 'moment'
 
 import fetch from '../../plugins/axios'
-import { timeStamp } from '../../utils/timeTransform'
+import { timeStamp, timeParser } from '../../utils/timeTransform'
 
 const tableColumne = [
   { title: '账号', align: 'center', dataIndex: 'account' },
@@ -39,7 +38,6 @@ class LoginLog extends Component {
         this.setState({ loading: true })
         try {
           const { ip, start, end } = values
-          console.log(timeStamp(start))
           const { data, max, page: current } = await fetch('FKSelectLogin', {
             ip,
             start: timeStamp(start),
@@ -49,7 +47,7 @@ class LoginLog extends Component {
           const formatData = data.map((e, index) => {
             const account = e[0]
             const nickname = e[1]
-            const login_time = moment(e[2] * 1000).format('YYYY-MM-DD hh:mm:ss') || '-'
+            const login_time = timeParser(e[2])
             const login_ip = e[3]
             return { account, nickname, login_time, login_ip, index }
           })

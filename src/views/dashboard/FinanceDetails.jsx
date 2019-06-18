@@ -25,10 +25,10 @@ const selectTypeConfig = [
 ]
 
 const selectOrderConfig = [
-  { key: 1, val: '变动时间从小到大' },
-  { key: 2, val: '变动时间从大到小' },
-  { key: 3, val: '变动值从小到大' },
-  { key: 4, val: '变动值从大到小' },
+  { key: 1, val: '变动时间从大到小' },
+  { key: 2, val: '变动时间从小到大' },
+  { key: 3, val: '变动值从大到小' },
+  { key: 4, val: '变动值从小到大' },
 ]
 
 class FinanceDetails extends Component {

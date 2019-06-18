@@ -48,12 +48,14 @@ class Login extends Component {
           const {
             prkey,
             user,
-            token
+            token,
+            nickname
           } = await fetch('Login', { ...values, yzm: { yzm, idx } })
 
           sessionStorage.setItem('prkey', prkey)
           sessionStorage.setItem('user', user)
           sessionStorage.setItem('token', token)
+          sessionStorage.setItem('nickname', nickname)
 
           const { history: { push } } = this.props
           push('/dashboard/readOrder')
