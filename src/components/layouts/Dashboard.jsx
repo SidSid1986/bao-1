@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import { Layout } from 'antd'
 
-import SideMenu from './SideMenu.js'
+import SideMenu from './SideMenu'
 import TopHeader from './TopHeader'
 
 import ReadOrder from '../../views/dashboard/ReadOrder'

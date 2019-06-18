@@ -20,8 +20,8 @@ const RechargeModal = ({ visible, onCancel, form, global }) => {
         try {
           const { data } = await fetch('FKCZM', values)
           const rechargeAmount = amountFixed(data[0])
-          const newBalance = amountFixed(data[3])
-          message.success(`恭喜您已成功充值${rechargeAmount},当前最新余额为${newBalance}`)
+          const newBalance = data[3]
+          message.success(`恭喜您已成功充值${rechargeAmount},当前最新余额为${amountFixed(newBalance)}`)
           setBalance(newBalance)
         } catch (error) {
           console.log(error)

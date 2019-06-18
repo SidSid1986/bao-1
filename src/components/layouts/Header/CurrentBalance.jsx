@@ -16,8 +16,9 @@ class CurrentBalance extends Component {
 
   refreshBalance = async () => {
     const { loadingHandler } = this.props
-    const { getBalance } = this.store
+    const { balance, getBalance } = this.store
 
+    if (balance > 0) return
     loadingHandler(true)
     try {
       await getBalance()

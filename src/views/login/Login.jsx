@@ -1,95 +1,92 @@
 import React, { Component } from 'react'
 import Particles from 'reactparticles.js'
-import { Form, Input, Button, Icon } from 'antd'
+import { Form, Input, Button, Icon, Spin } from 'antd'
+import { inject, observer } from 'mobx-react'
 
-import ContactIcon from '../../components/login/ContactIcon'
+// import ContactIcon from '../../components/login/ContactIcon'
+import Contact from '../../components/login/Contact'
 
 import fetch from '../../plugins/axios'
+import { storage } from '../../utils/storage'
 
 import './login.css'
 
-function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field])
-}
+const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field])
 
-function renderContact(contact) {
-  return Object.keys(contact).map(e => ContactIcon({ type: e, content: contact[e], color: '#1890ff' }))
-}
+const form = Comp => Form.create({ name: 'login' })(Comp)
 
+@inject('global')
+@observer
+@form
 class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      contact: {
-        qq: '',
-        wechat: ''
-      },
-      idx: '',
-      pic: '',
-      loading: false
+      loading: false,
+      codeLoading: false
     }
+    this.store = this.props.global
   }
 
   componentDidMount() {
     this.props.form.validateFields()
-    this.getContactWay()
-    sessionStorage.clear()
+    this.getValidCode()
   }
 
   onSubmit = e => {
     e.preventDefault()
-    this.props.form.validateFields(async (err, values) => {
+    const { validateFields, setFieldsValue } = this.props.form
+    validateFields(async (err, values) => {
       if (!err) {
         this.setState({ loading: true })
         try {
           // testbbb dede123
-          const { idx } = this.state
+          const idx = storage.get('idx')
           const { yzm } = values
           const {
             prkey,
             user,
             token,
-            nickname
+            nickname,
+            point,
+            sf
           } = await fetch('Login', { ...values, yzm: { yzm, idx } })
 
-          sessionStorage.setItem('prkey', prkey)
-          sessionStorage.setItem('user', user)
-          sessionStorage.setItem('token', token)
-          sessionStorage.setItem('nickname', nickname)
+          storage.set({
+            userInfo: {
+              account: user,
+              nickname,
+              key: prkey,
+              token,
+              balance: point,
+              role: sf
+            }
+          })
 
-          const { history: { push } } = this.props
+          const { history: { push }, global: { setBalance } } = this.props
+          setBalance(point)
           push('/dashboard/readOrder')
         } catch (error) {
-          this.getContactWay()
+          setFieldsValue({ yzm: '', pwd: '' })
           this.setState({ loading: false })
+          this.getValidCode()
           console.log(error)
         }
       }
     })
   }
 
-  getContactWay = async() => {
+  getValidCode = async () => {
+    this.setState({ codeLoading: true })
     try {
-      const {
-        QQ,
-        WX,
-        servertime,
-        yzm: { idx, pic } 
-      } = await fetch('GetQQWX', {})
-      sessionStorage.setItem('system_time', servertime)
-      this.setState({
-        contact: {
-          qq: QQ,
-          wechat: WX
-        },
-        idx,
-        pic
-      })
+      const { getGlobalConfig } = this.store
+      await getGlobalConfig()
     } catch (error) {
       console.log(error)
+    } finally {
+      this.setState({ codeLoading: false })
     }
   }
-
 
   render() {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form
@@ -97,8 +94,8 @@ class Login extends Component {
     const usernameError = isFieldTouched('user') && getFieldError('user')
     const passwordError = isFieldTouched('pwd') && getFieldError('password')
 
-    const { contact, loading, pic } = this.state
-    const Contact = renderContact(contact)
+    const { loading, codeLoading } = this.state
+    const { globalConfig: { service, code } } = this.store
 
     return (
       <div className="login">
@@ -122,7 +119,14 @@ class Login extends Component {
               )}
             </Form.Item>
 
-            { pic ? <img src={`data:image/jpg;base64,${pic}`} alt="验证码" title="验证码" onClick={this.getContactWay} /> : null }
+            <Spin spinning={codeLoading}>
+              {code && <img
+                src={`data:image/jpg;base64,${code}`}
+                alt="验证码"
+                title="验证码"
+                onClick={this.getValidCode}
+              />}
+            </Spin>
 
             <Form.Item label="验证码" validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
               {getFieldDecorator('yzm', {
@@ -145,11 +149,12 @@ class Login extends Component {
             </Form.Item>
           </Form>
 
-          {Contact}
+          <Contact service={service} />
+
         </div>
       </div>
     )
   }
 }
  
-export default Form.create({ name: 'login' })(Login)
+export default Login

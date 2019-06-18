@@ -1,0 +1,12 @@
+.contact-horizontal {
+  line-height: 24px;
+}
+
+.contact-horizontal span,
+.contact-inline span {
+  margin-left: 10px;
+}
+
+.contact-inline {
+  margin-right: 20px;
+}
