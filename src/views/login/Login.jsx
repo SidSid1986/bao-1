@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import Particles from 'reactparticles.js'
 import { Form, Input, Button, Icon, Spin } from 'antd'
 import { inject, observer } from 'mobx-react'
+import Particle from 'react-particles-webgl'
 
-// import ContactIcon from '../../components/login/ContactIcon'
 import Contact from '../../components/login/Contact'
 
 import fetch from '../../plugins/axios'
 import { storage } from '../../utils/storage'
 
+import particleConfig from './particle-config'
 import './login.css'
 
 const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field])
@@ -99,23 +99,31 @@ class Login extends Component {
 
     return (
       <div className="login">
-        <Particles id="your-component-particles" />
+        <Particle config={particleConfig} />
 
         <div className="loginForm">
           <Form onSubmit={this.onSubmit}>
-            <Form.Item label="账号" validateStatus={usernameError ? 'error' : ''} help={usernameError || ''}>
+            <Form.Item validateStatus={usernameError ? 'error' : ''} help={usernameError || ''}>
               {getFieldDecorator('user', {
                 rules: [{ required: true, message: '请输入账号!' }],
               })(
-                <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+                <Input
+                  size="large"
+                  placeholder="账号"
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                />
               )}
             </Form.Item>
 
-            <Form.Item label="密码" validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
+            <Form.Item validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
               {getFieldDecorator('pwd', {
                 rules: [{ required: true, message: '请输入密码!' }],
               })(
-                <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" />
+                <Input
+                  size="large"
+                  placeholder="密码"
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password"
+                />
               )}
             </Form.Item>
 
@@ -135,17 +143,22 @@ class Login extends Component {
               </Spin>
             </Form.Item>
 
-            <Form.Item label="验证码" validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
+            <Form.Item validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
               {getFieldDecorator('yzm', {
                 rules: [{ required: true, message: '请输入验证码!' }],
               })(
-                <Input prefix={<Icon type="security-scan" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+                <Input
+                  size="large"
+                  placeholder="验证码"
+                  prefix={<Icon type="security-scan" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                />
               )}
             </Form.Item>
 
             <Form.Item>
               <Button
                 block
+                size="large"
                 type="primary"
                 htmlType="submit"
                 loading={loading}
