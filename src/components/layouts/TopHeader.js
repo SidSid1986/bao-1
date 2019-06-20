@@ -51,7 +51,7 @@ const TopHeader = ({ global }) => {
           <RollNotice />
 
           <div className="header-content">
-            <Contact service={service} layout="inline" refresh />
+            <Contact service={service} />
 
             <CurrentBalance margin loadingHandler={setLoading} />
 

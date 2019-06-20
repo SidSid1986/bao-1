@@ -1,10 +1,12 @@
 import React from 'react'
 import { inject } from 'mobx-react'
-import { Icon } from 'antd'
+import { Popconfirm } from 'antd'
+
+import { clipboardHandler } from '../../utils/clipboard'
 
 import './contact.css'
 
-const Contact = ({ service, layout = 'horizontal', refresh = false, global }) => {
+const Contact = ({ service, global, size = 26 }) => {
 
   if (!service || typeof service !== 'object') return null
 
@@ -12,29 +14,28 @@ const Contact = ({ service, layout = 'horizontal', refresh = false, global }) =>
 
   const contactItems = service.map(e => {
     const { icon, content } = e
-    if (layout === 'horizontal') {
-      return (
-        <div className="contact-horizontal" key={icon}>
-          <Icon type={icon} />
-          <span>{content}</span>
-        </div>
-      )
-    } 
-    if (layout === 'inline') {
-      return (
-        <span className="contact-inline" key={icon}>
-          <Icon type={icon} />
-          <span>{content}</span>
-        </span>
-      )
-    }
-    return null
+    return (
+      <Popconfirm
+        key={icon}
+        title={content}
+        okText="复制"
+        cancelText="刷新"
+        onConfirm={() => { clipboardHandler(content) }}
+        onCancel={getGlobalConfig}
+      >
+        <img
+          src={`/images/${icon}.png`}
+          alt={icon}
+          title={icon}
+          width={size}
+        />
+      </Popconfirm>
+    )
   })
 
   return (
     <div className="simulationA">
       {contactItems}
-      {refresh && <Icon type='sync' onClick={getGlobalConfig} />}
     </div>
   )
 }
