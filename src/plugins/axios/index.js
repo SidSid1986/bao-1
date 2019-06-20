@@ -24,7 +24,9 @@ const formatFetch = (url, params) => {
   const data = hexString(JSON.stringify(params))
 
   /** 最新时间戳 */
-  const time = Date.parse(new Date()) / 1000
+  const offsetTime = storage.get('offsetTime') || 0
+  const clientTime = Date.parse(new Date()) / 1000
+  const time = clientTime + offsetTime
 
   /** 整合参数 val */
   let valStr = url, md5Params = {}

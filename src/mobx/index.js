@@ -55,7 +55,7 @@ class Store {
       }
       
       try {
-        const { QQ, WX, yzm: { idx, pic } } = await fetch('GetQQWX', {})
+        const { QQ, WX, servertime, yzm: { idx, pic } } = await fetch('GetQQWX', {})
         const service = [
           { icon: 'qq', content: QQ },
           { icon: 'wechat', content: WX },
@@ -66,6 +66,13 @@ class Store {
         }
         storage.set({ idx })
         storage.set({ service })
+
+        /** 客户时间 */
+        const clientTime = new Date().getTime() / 1000
+        /** 时间差 */
+        const offsetTime = servertime - clientTime
+      
+        storage.set({ offsetTime })
         tip && message.success('客服刷新成功~')
       } catch (error) {
         console.log(error)

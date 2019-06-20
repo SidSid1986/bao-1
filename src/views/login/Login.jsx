@@ -196,7 +196,6 @@ class Login extends Component {
                 type="primary"
                 htmlType="submit"
                 loading={loading}
-                disabled={hasErrors(getFieldsError())}
               >
                 {submitText}
               </Button>
