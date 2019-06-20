@@ -1,24 +1,33 @@
 import React, { useState } from 'react'
-import { Layout, Row, Col, Avatar, Dropdown, Icon, Modal, Spin } from 'antd'
+import { Layout, Avatar, Dropdown, Icon, Modal, Spin } from 'antd'
 import { inject } from 'mobx-react'
 
 import DropMenu from './Header/DropMenu'
 import RechargeModal from './Header/RechargeModal'
 import CurrentBalance from './Header/CurrentBalance'
 import Contact from '../login/Contact'
+import RollNotice from './Header/RollNotice'
 
+import fetch from '../../plugins/axios'
 import { storage } from '../../utils/storage'
 
-const { Header } = Layout
+import './header.css'
 
-const nickname = storage.get('userInfo') && storage.get('userInfo').nickname
+const { Header } = Layout
 
 const logoutModal = () => {
   Modal.confirm({
     title: '是否确认退出',
     onOk: async () => {
-      sessionStorage.clear()
-      window.location.href = '/'
+      try {
+        const { code } = await fetch('LoginOut', {})
+        if (code === 200) {
+          sessionStorage.clear()
+          window.location.href = '/'
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   })
 }
@@ -28,6 +37,7 @@ const TopHeader = ({ global }) => {
   const [loading, setLoading] = useState(false)
   
   const { globalConfig: { service } } = global
+  const nickname = storage.get('userInfo') && storage.get('userInfo').nickname
   
   const dropMenu = [
     { key: 'recharge', val: '充值', icon: 'dollar', callback: () => { setRechargeModalVisible(true) } },
@@ -37,25 +47,23 @@ const TopHeader = ({ global }) => {
   return (
     <Header style={{ background: '#fff' }} id="header">
       <Spin spinning={loading}>
-        <Row type="flex" justify="end" align="middle">
-          <Col>
+        <div className="header-container">
+          <RollNotice />
+
+          <div className="header-content">
             <Contact service={service} layout="inline" refresh />
-          </Col>
 
-          <Col>
-            <CurrentBalance loadingHandler={setLoading} />
-          </Col>
+            <CurrentBalance margin loadingHandler={setLoading} />
 
-          <Col offset={1}>
-            <Dropdown overlay={DropMenu(dropMenu)} getPopupContainer={() => document.querySelector('#header')} className="header-drop">
+            <Dropdown overlay={DropMenu(dropMenu)} getPopupContainer={() => document.querySelector('#header')}>
               <div className="simulationA">
                 <Avatar shape="square" src="/images/avatar.jpg" />
-                <span style={{ margin: '0 15px' }}>{nickname}</span>
+                <span className="mH-20">{nickname}</span>
                 <Icon type="down" />
               </div>
             </Dropdown>
-          </Col>
-        </Row>
+          </div>
+        </div>
       </Spin>
 
       <RechargeModal visible={rechargeModalVisible} onCancel={setRechargeModalVisible} />

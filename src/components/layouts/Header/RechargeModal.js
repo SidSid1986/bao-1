@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Form, Input, message, Spin } from 'antd'
+import { Modal, Form, Input, message, Spin, Button, Icon } from 'antd'
 import { inject } from 'mobx-react'
 
 import CurrentBalance from './CurrentBalance'
@@ -12,7 +12,7 @@ const RechargeModal = ({ visible, onCancel, form, global }) => {
   const [loading, setLoading] = useState(false)
 
   const { getFieldDecorator, validateFields, resetFields } = form
-  const { setBalance, globalConfig: { service } } = global
+  const { setBalance, globalConfig: { service }, getGlobalConfig } = global
 
   const onSubmit = () => {
     validateFields(async (err, values) => {
@@ -32,6 +32,17 @@ const RechargeModal = ({ visible, onCancel, form, global }) => {
         }
       }
     })
+  }
+
+  const refreshContact = async () => {
+    setLoading(true)
+    try {
+      await getGlobalConfig()
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -59,6 +70,13 @@ const RechargeModal = ({ visible, onCancel, form, global }) => {
         </Form>
 
         <Contact service={service} />
+
+        <Button onClick={refreshContact} size="small" style={{ margin: '20px 0' }}>
+          <span>刷新</span>
+          <Icon type="sync" />
+        </Button>
+
+        <div className="red--text">如果联系不到，请刷新客服信息查看是否已更改联系方式</div>
       </Spin>
     </Modal>
   )

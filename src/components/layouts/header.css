@@ -1,0 +1,15 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.header-content {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.mH-20 {
+  margin-left: 20px;
+  margin-right: 20px;
+}

@@ -119,14 +119,21 @@ class Login extends Component {
               )}
             </Form.Item>
 
-            <Spin spinning={codeLoading}>
-              {code && <img
-                src={`data:image/jpg;base64,${code}`}
-                alt="验证码"
-                title="验证码"
-                onClick={this.getValidCode}
-              />}
-            </Spin>
+            <Form.Item>
+              <Spin spinning={codeLoading}>
+                {code && <img
+                  src={`data:image/jpg;base64,${code}`}
+                  alt="验证码"
+                  title="验证码"
+                  onClick={this.getValidCode}
+                />}
+                <Icon
+                  type="sync"
+                  onClick={this.getValidCode}
+                  style={{ fontSize: 20, color: '#1890ff', marginLeft: 20 }}
+                />
+              </Spin>
+            </Form.Item>
 
             <Form.Item label="验证码" validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
               {getFieldDecorator('yzm', {

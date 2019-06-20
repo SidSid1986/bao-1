@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Form, Input, Button, DatePicker } from 'antd'
+import { Table, Form, Input, Button, DatePicker, Popconfirm } from 'antd'
 import moment from 'moment'
 
 import SelectForm from '../../components/form/SelectForm'
@@ -16,7 +16,9 @@ const endTime = moment().endOf('day')
 
 const tableColumne = [
   { title: '文章地址', align: 'center', dataIndex: 'url', render: url => (
-    <span className="simulationA" onClick={() => window.open(url)}>{url}</span>
+    <Popconfirm title="是否需要在新窗口打开该文章地址" onConfirm={() => window.open(url)}>
+      <span className="simulationA">{url}</span>
+    </Popconfirm>
   ) },
   { title: '标题', align: 'center', dataIndex: 'title' },
   { title: '创建时间', align: 'center', dataIndex: 'create_time' },
@@ -42,8 +44,8 @@ const selectOrderConfig = [
   { key: 2, val: '下单时间从小到大' },
   { key: 3, val: '刷单数量从大到小' },
   { key: 4, val: '刷单数量从小到大' },
-  { key: 5, val: '刷单总计从大到小' },
-  { key: 6, val: '刷单总计从小到大' },
+  { key: 5, val: '刷单总价从大到小' },
+  { key: 6, val: '刷单总价从小到大' },
   { key: 7, val: '刷单状态从大到小' },
   { key: 8, val: '刷单状态从小到大' }
 ]

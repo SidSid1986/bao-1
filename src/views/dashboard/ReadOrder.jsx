@@ -106,7 +106,8 @@ class Read extends Component {
 
       this.setState({ loading: true })
       try {
-        const { data } = await fetch('FKGetPrice', {})
+        const { data, notice } = await fetch('FKGetPrice', {})
+        this.props.global.setNotice(notice.map(e => e[0]))
         data.forEach((e, i) => {
           if (+modelConfig[i].key === +e[0]) {
             modelConfig[i].on_off = +e[1]
@@ -117,7 +118,7 @@ class Read extends Component {
             modelConfig[i].info = e[5]
           }
         })
-        message.success('单价刷新成功~')
+        message.success('已获取最新信息~')
       } catch (error) {
         console.log(error)
       } finally {
@@ -194,12 +195,12 @@ class Read extends Component {
           <Form.Item label="订单价格">
             <Row gutter={24}>
               <Col span={6}>
-                <Input value={numFixed(exchange * count, 4)} disabled />
+                <Input value={numFixed((exchange * count) / 1000, 4)} disabled />
               </Col>
               {
                 on_off ? 
                 <Col span={18}>
-                  <span style={{ marginRight: 10 }}>当前单价：{exchange}</span>
+                  <span style={{ marginRight: 10 }}>当前单价：{exchange} / 千次</span>
                   <Icon type="sync" onClick={this.getNewestPrice} />
                 </Col>
                 : <Col span={18} className="red--text">不可下单</Col>

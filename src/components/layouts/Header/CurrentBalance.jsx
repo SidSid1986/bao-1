@@ -11,16 +11,16 @@ class CurrentBalance extends Component {
   }
 
   componentDidMount() {
-    this.refreshBalance()
+    const { balance } = this.store
+    if (!balance) this.refreshBalance()
   }
 
   refreshBalance = async () => {
     const { loadingHandler } = this.props
-    const { balance, getBalance } = this.store
+    const { getBalance } = this.store
 
-    if (balance > 0) return
-    loadingHandler(true)
     try {
+      loadingHandler(true)
       await getBalance()
     } catch (error) {
       console.log(error)
@@ -30,12 +30,13 @@ class CurrentBalance extends Component {
   }
 
   render() {
-    const { balance, getBalance } = this.store
+    const { balance } = this.store
+    const { margin } = this.props
 
     return (
-      <div>
+      <div className={margin && 'mH-20'}>
         <span style={{ marginRight: 10 }}>当前余额：{balance}</span>
-        <Icon type="sync" onClick={() => { getBalance() }} />
+        <Icon type="sync" onClick={this.refreshBalance} />
       </div>
     )
   }

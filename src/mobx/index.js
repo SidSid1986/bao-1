@@ -5,12 +5,10 @@ import fetch from '../plugins/axios'
 import { storage } from '../utils/storage'
 import { amountFixed } from '../utils/numFixed'
 
-let throttle = {
-  balanceC: 0,
-  balanceT: null,
-  configC: 0,
-  configT: null
-}
+let balanceC = 0
+let balanceT = null
+let configC = 0
+let configT = null
 
 class Store {
   @observable balance = storage.get('balance') || 0
@@ -18,10 +16,10 @@ class Store {
     service: storage.get('service') || [],
     pic: ''
   }
+  @observable notice = []
 
   @action
   getBalance = async (tip = true) => {
-    let { balanceC, balanceT } = throttle
     if (balanceC < 3) {
       balanceC = balanceC + 1
 
@@ -42,17 +40,17 @@ class Store {
     } else {
       message.info('请勿频繁刷新~')
     }
+    return false
   }
 
   @action
   getGlobalConfig = async (tip = false) => {
-    let { configC, conigT } = throttle
-    if (configC < 3) {
+    if (configC < 8) {
       configC = configC + 1
-      if (!conigT) {
-        conigT = setTimeout(() => {
+      if (!configT) {
+        configT = setTimeout(() => {
           configC = 0
-          conigT = null
+          configT = null
         }, 10000)
       }
       
@@ -75,6 +73,7 @@ class Store {
     } else {
       message.info('请勿频繁刷新~')
     }
+    return false
   }
 
   @action
@@ -82,6 +81,9 @@ class Store {
     this.balance = amountFixed(balance) 
     storage.set({ balance: this.balance })
   }
+
+  @action
+  setNotice = notice => this.notice = notice
 }
 
 export default Store

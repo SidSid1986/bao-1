@@ -1,17 +1,20 @@
 import React from 'react'
+import { inject } from 'mobx-react'
 import { Icon } from 'antd'
 
 import './contact.css'
 
-const Contact = ({ service, layout = 'horizontal', refresh = false }) => {
+const Contact = ({ service, layout = 'horizontal', refresh = false, global }) => {
 
   if (!service || typeof service !== 'object') return null
+
+  const { getGlobalConfig } = global
 
   const contactItems = service.map(e => {
     const { icon, content } = e
     if (layout === 'horizontal') {
       return (
-        <div className="simulationA contact-horizontal" key={icon}>
+        <div className="contact-horizontal" key={icon}>
           <Icon type={icon} />
           <span>{content}</span>
         </div>
@@ -19,7 +22,7 @@ const Contact = ({ service, layout = 'horizontal', refresh = false }) => {
     } 
     if (layout === 'inline') {
       return (
-        <span className="simulationA contact-inline" key={icon}>
+        <span className="contact-inline" key={icon}>
           <Icon type={icon} />
           <span>{content}</span>
         </span>
@@ -29,10 +32,11 @@ const Contact = ({ service, layout = 'horizontal', refresh = false }) => {
   })
 
   return (
-    <div>
+    <div className="simulationA">
       {contactItems}
+      {refresh && <Icon type='sync' onClick={getGlobalConfig} />}
     </div>
   )
 }
 
-export default Contact
+export default inject('global')(Contact)
