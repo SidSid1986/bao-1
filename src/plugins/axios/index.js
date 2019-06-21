@@ -28,7 +28,7 @@ const formatFetch = (url, params) => {
 
   /** 整合参数 val */
   let valStr = url, md5Params = {}
-  if (url === 'GetQQWX' || url === 'Login' || 'Reg' || !storage.get('userInfo')) {
+  if (url === 'GetQQWX' || url === 'Login' || url === 'Reg' || !storage.get('userInfo')) {
     md5Params = { user: 'null', data, token: 'null', key: 'null', time }
   } else {
     const { account, key, token } = storage.get('userInfo')
