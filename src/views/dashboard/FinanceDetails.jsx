@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Form, Button, DatePicker } from 'antd'
+import moment from 'moment'
 
 import SelectForm from '../../components/form/SelectForm'
 
@@ -8,6 +9,9 @@ import { amountFixed } from '../../utils/numFixed'
 import { timeParser, timeStamp } from '../../utils/timeTransform'
 
 const { RangePicker } = DatePicker
+
+const startTime = moment().startOf('day')
+const endTime = moment().endOf('day')
 
 const tableColumne = [
   { title: '类型', align: 'center', dataIndex: 'type', render: type => selectTypeConfig.find(e => +type === e.key).val || '-' },
@@ -115,7 +119,7 @@ class FinanceDetails extends Component {
           />
 
           <Form.Item label="变动时间">
-            {getFieldDecorator('timeRange', { initialValue: [] })(<RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+            {getFieldDecorator('timeRange', { initialValue: [startTime, endTime] })(<RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
           </Form.Item>
 
           <Form.Item>

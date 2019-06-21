@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import { Table, Form, Input, Button, DatePicker } from 'antd'
+import moment from 'moment'
 
 import fetch from '../../plugins/axios'
 import { timeStamp, timeParser } from '../../utils/timeTransform'
 
 const { RangePicker } = DatePicker
+
+const startTime = moment().startOf('day')
+const endTime = moment().endOf('day')
 
 const tableColumne = [
   { title: '账号', align: 'center', dataIndex: 'account' },
@@ -87,7 +91,7 @@ class LoginLog extends Component {
 
           <Form.Item label="登陆时间">
             {
-              getFieldDecorator('timeRange', { initialValue: [] })(
+              getFieldDecorator('timeRange', { initialValue: [startTime, endTime] })(
                 <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
               )
             }

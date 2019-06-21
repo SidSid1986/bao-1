@@ -26,7 +26,7 @@ const get = (key) => {
   const nowDate = new Date().getTime();
 
   if (nowDate > exp) {
-    this.removeItem(key);
+    sessionStorage.removeItem(key);
     return null;
   }
 
