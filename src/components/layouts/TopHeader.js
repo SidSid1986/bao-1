@@ -41,7 +41,7 @@ const TopHeader = ({ global }) => {
   
   const dropMenu = [
     { key: 'recharge', val: '充值', icon: 'dollar', callback: () => { setRechargeModalVisible(true) } },
-    { key: 'logout', val: '退出登陆', icon: 'logout', callback: () => { logoutModal() } }
+    { key: 'logout', val: '安全退出', icon: 'logout', callback: () => { logoutModal() } }
   ]
 
   return (
@@ -51,7 +51,7 @@ const TopHeader = ({ global }) => {
           <RollNotice />
 
           <div className="header-content">
-            <Contact service={service} />
+            <Contact service={service} pure />
 
             <CurrentBalance margin loadingHandler={setLoading} />
 

@@ -20,7 +20,7 @@ export const login = [
   {
     model: 'yzm',
     label: '验证码',
-    placeholder: '验证码',
+    placeholder: '验证码   点击刷新 →',
     prefix: 'security-scan'
   }
 ]
@@ -72,7 +72,7 @@ export const register = [
   {
     model: 'yqm',
     label: '邀请码',
-    placeholder: '邀请码',
+    placeholder: '邀请码(没有请留空)',
     prefix: 'trademark',
     unrequired: true,
     initialValue: ''

@@ -4,9 +4,17 @@ import { Popconfirm } from 'antd'
 
 import { clipboardHandler } from '../../utils/clipboard'
 
-import './contact.css'
+const containerStyle = {
+  display: 'flex'
+}
 
-const Contact = ({ service, global, size = 26 }) => {
+const itemStyle = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  marginRight: 10
+}
+
+const Contact = ({ service, global, size = 26, pure = false }) => {
 
   if (!service || typeof service !== 'object') return null
 
@@ -14,6 +22,8 @@ const Contact = ({ service, global, size = 26 }) => {
 
   const contactItems = service.map(e => {
     const { icon, content } = e
+
+    const contactContent = !pure && <span>{content}</span>
     return (
       <Popconfirm
         key={icon}
@@ -23,18 +33,21 @@ const Contact = ({ service, global, size = 26 }) => {
         onConfirm={() => { clipboardHandler(content) }}
         onCancel={getGlobalConfig}
       >
-        <img
-          src={`/images/${icon}.png`}
-          alt={icon}
-          title={icon}
-          width={size}
-        />
+        <div style={itemStyle}>
+          <img
+            src={`/images/${icon}.png`}
+            alt={icon}
+            title={icon}
+            width={size}
+          />
+          {contactContent}
+        </div>
       </Popconfirm>
     )
   })
 
   return (
-    <div className="simulationA">
+    <div className="simulationA" style={containerStyle}>
       {contactItems}
     </div>
   )

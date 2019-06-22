@@ -45,10 +45,13 @@ class LoginLog extends Component {
         this.setState({ loading: true })
         try {
           const { ip, timeRange } = values
+          const start = timeStamp(timeRange[0])
+          const end = timeStamp(timeRange[1])
+          delete values.timeRange
           const { data, max, page: current } = await fetch('FKSelectLogin', {
             ip,
-            start: timeStamp(timeRange[0]),
-            end: timeStamp(timeRange[1]),
+            start,
+            end,
             page
           })
           const formatData = data.map((e, index) => {

@@ -64,10 +64,13 @@ class FinanceDetails extends Component {
         this.setState({ loading: true })
         try {
           const { timeRange } = values
+          const start = timeStamp(timeRange[0])
+          const end = timeStamp(timeRange[1])
+          delete values.timeRange
           const { data, max, page: current } = await fetch('FKSelectGold', {
             ...values,
-            start: timeStamp(timeRange[0]),
-            end: timeStamp(timeRange[1]),
+            start,
+            end,
             page
           })
           const formatData = data.map((e, index) => {

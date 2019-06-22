@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Form, Input, message, Spin, Button, Icon } from 'antd'
+import { Modal, Form, Input, message, Spin, Button, Icon, Row, Col } from 'antd'
 import { inject } from 'mobx-react'
 
 import CurrentBalance from './CurrentBalance'
@@ -69,12 +69,18 @@ const RechargeModal = ({ visible, onCancel, form, global }) => {
           </Form.Item>
         </Form>
 
-        <Contact service={service} />
+        <Row type="flex" align="middle">
+          <Col>
+            <Contact service={service} />
+          </Col>
 
-        <Button onClick={refreshContact} size="small" style={{ margin: '20px 0' }}>
-          <span>刷新</span>
-          <Icon type="sync" />
-        </Button>
+          <Col>
+            <Button onClick={refreshContact} size="small" style={{ margin: '20px 0' }}>
+              <span>刷新</span>
+              <Icon type="sync" />
+            </Button>
+          </Col>
+        </Row>
 
         <div className="red--text">如果联系不到，请刷新客服信息查看是否已更改联系方式</div>
       </Spin>

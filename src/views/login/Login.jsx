@@ -13,7 +13,7 @@ import { login, register } from './formConfig'
 // import particleConfig from './particle-config'
 import './login.css'
 
-const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field])
+// const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field])
 
 const form = Comp => Form.create({ name: 'login' })(Comp)
 
@@ -123,7 +123,9 @@ class Login extends Component {
       const { model } = e
       let suffix = null
 
-      if (model === 'yzm' && code) {
+      const isCode = model === 'yzm' && code
+
+      if (isCode) {
         suffix = (
           <img
             src={`data:image/jpg;base64,${code}`}
@@ -131,6 +133,7 @@ class Login extends Component {
             title="验证码"
             height="38px"
             onClick={this.getValidCode}
+            style={{ cursor: 'pointer' }}
           />
         )
       }
@@ -168,7 +171,7 @@ class Login extends Component {
   }
 
   render() {
-    const { getFieldsError } = this.props.form
+    // const { getFieldsError } = this.props.form
 
     const { loading, formType } = this.state
     const { globalConfig: { service } } = this.store

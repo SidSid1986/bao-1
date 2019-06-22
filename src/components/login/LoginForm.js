@@ -10,7 +10,7 @@ const LoginForm = ({ form, config, suffix }) => {
   const DirectInput = type === 'password' ? Input.Password : Input
 
   return (
-    <Form.Item className="Item">
+    <Form.Item>
       {
         getFieldDecorator(model, {
           initialValue,
