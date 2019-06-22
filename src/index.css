@@ -37,3 +37,7 @@ li {
 .green--text {
   color: greenyellow;
 }
+
+.ant-layout-sider-zero-width-trigger {
+  top: 10px!important;
+}
