@@ -30,6 +30,8 @@ const SideMenu = props => {
 
   return (
     <Sider breakpoint="lg" collapsedWidth="0">
+      <img src="/images/menu_logo.png" alt="logo" className="menuLogo" />
+
       <Menu
         theme="dark"
         mode="inline"

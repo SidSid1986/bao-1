@@ -185,6 +185,8 @@ class Login extends Component {
         <div id="particle" />
 
         <div className="loginForm">
+          <img src="/images/login_logo.png" alt="logo" className="loginLogo" />
+
           <Form onSubmit={this.onSubmit}>
             {RenderForm}
 

@@ -27,3 +27,16 @@
 #login_yzm + .ant-input-suffix {
   right: 1px;
 }
+
+
+.loginLogo {
+  width: 50%;
+  display: block;
+  margin: 0 auto 50px;
+}
+
+.menuLogo {
+  width: 80%;
+  display: block;
+  margin: 30px auto;
+}
