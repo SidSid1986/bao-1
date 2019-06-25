@@ -20,7 +20,7 @@ export const login = [
   {
     model: 'yzm',
     label: '验证码',
-    placeholder: '验证码   点击刷新 →',
+    placeholder: '验证码　　　　　点击刷新 →',
     prefix: 'security-scan'
   }
 ]

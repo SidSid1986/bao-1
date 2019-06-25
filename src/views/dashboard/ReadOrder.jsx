@@ -1,21 +1,15 @@
 import React, { Component } from 'react'
-import { inject } from 'mobx-react'
-import { Spin, Form, Input, InputNumber, Select, Button, Row, Col, Icon, Modal, Alert, message } from 'antd'
+import { inject, observer } from 'mobx-react'
+import { Spin, Form, Input, InputNumber, Select, Button, Row, Col, Icon, Modal, Alert } from 'antd'
 
 import fetch from '../../plugins/axios'
 import { numFixed, amountFixed } from '../../utils/numFixed'
 
 const { Option } = Select
 
-const modelConfig = [
-  { key: 1, val: '标准', on_off: 1, minOrder: 0, maxOrder: 0, price: 0, exchange: 0, info: '' },
-  { key: 2, val: '秒单', on_off: 1, minOrder: 0, maxOrder: 0, price: 0, exchange: 0, info: '' },
-  { key: 3, val: '夜单', on_off: 1, minOrder: 0, maxOrder: 0, price: 0, exchange: 0, info: '' }
-]
-
 const OptionItems = model => model.map(e => {
-  const { key, val } = e
-  return <Option key={key} value={key} >{ val }</Option>
+  const { key, title } = e
+  return <Option key={key} value={key} >{title}</Option>
 })
 
 const labelCol = {
@@ -34,6 +28,7 @@ const readCountValid = valid => {
 }
 
 @inject('global')
+@observer
 class Read extends Component {
   constructor(props) {
     super(props)
@@ -42,6 +37,7 @@ class Read extends Component {
       model: 0,
       count: 0
     }
+    this.store = this.props.global
     this.throttle = 0
     this.throttleTimer = null
   }
@@ -67,24 +63,22 @@ class Read extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         this.setState({ loading: true })
-        const { price } = modelConfig[this.state.model]
+        const { price } = this.store.price[this.state.model]
         try {
-          const { code, change, new: balance, old } = await fetch('FKAddTask', { ...values, price })
-          if (code === 200) {
-            const { setBalance } = this.props.global
-            setBalance(balance)
-            resetFields()
-            Modal.success({
-              title: '操作成功~',
-              content: (
-                <div style={{ marginTop: 30 }}>
-                  <p>下单前余额：{amountFixed(old)}</p>
-                  <p>订单花费：{amountFixed(change)}</p>
-                  <p>当前余额：{amountFixed(balance)}</p>
-                </div>
-              )
-            })
-          }
+          const { change, new: balance, old } = await fetch('FKAddTask', { ...values, price })
+          const { setBalance } = this.props.global
+          setBalance(balance)
+          resetFields()
+          Modal.success({
+            title: '操作成功~',
+            content: (
+              <div style={{ marginTop: 30 }}>
+                <p>下单前余额：{amountFixed(old)}</p>
+                <p>订单花费：{amountFixed(change)}</p>
+                <p>当前余额：{amountFixed(balance)}</p>
+              </div>
+            )
+          })
         } catch (error) {
           console.log(error)
         } finally {
@@ -95,44 +89,24 @@ class Read extends Component {
   }
 
   getNewestPrice = async () => {
-    if (this.throttle < 3) {
-      this.throttle = this.throttle + 1
-      if (!this.throttleTimer) {
-        this.throttleTimer = setTimeout(() => {
-          this.throttle = 0
-          this.throttleTimer = null
-        }, 10000)
-      }
-
-      this.setState({ loading: true })
-      try {
-        const { data, notice } = await fetch('FKGetPrice', {})
-        this.props.global.setNotice(notice.map(e => e[0]))
-        data.forEach((e, i) => {
-          if (+modelConfig[i].key === +e[0]) {
-            modelConfig[i].on_off = +e[1]
-            modelConfig[i].minOrder = e[2]
-            modelConfig[i].maxOrder = e[3]
-            modelConfig[i].price = e[4]
-            modelConfig[i].exchange = amountFixed(e[4])
-            modelConfig[i].info = e[5]
-          }
-        })
-        message.success('已获取最新信息~')
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.setState({ model: 0, loading: false })
-      }
-    } else {
-      message.info('请勿频繁刷新~')
+    this.setState({ loading: true })
+    try {
+      await this.store.getPriceAndNotice()
+    } catch (error) {
+      console.log(error)
+    } finally {
+      this.setState({ loading: false })
     }
   }
 
   render() {
     const { getFieldDecorator } = this.props.form
     const { count, model, loading } = this.state
-    const currentModel = modelConfig[model]
+    const { priceConfig } = this.store
+
+    if (!Object.keys(priceConfig).length) return null
+
+    const currentModel = priceConfig[model]
     const { info, minOrder, maxOrder, exchange, on_off } = currentModel
 
     return (
@@ -154,7 +128,7 @@ class Read extends Component {
                 initialValue: 1, rules: [{ required: true, message: '请选择模式~' }]
               })(
                 <Select dropdownMatchSelectWidth={false} onSelect={e => this.handlerChange('model', e - 1)}>
-                  {OptionItems(modelConfig)}
+                  {OptionItems(priceConfig)}
                 </Select>
               )
             }
@@ -171,7 +145,11 @@ class Read extends Component {
                   getFieldDecorator('count', {
                     rules: [
                       { required: true, message: '请输入阅读量~' },
-                      { validator: (field, value, callback) => { readCountValid({ value, callback, max: maxOrder, min: minOrder }) } }
+                      { validator: (field, value, callback) => 
+                        {
+                          readCountValid({ value, callback, max: maxOrder, min: minOrder }) 
+                        }
+                      }
                     ]
                   })(
                     <InputNumber
@@ -203,7 +181,10 @@ class Read extends Component {
                   <span style={{ marginRight: 10 }}>当前单价：{exchange} / 千次</span>
                   <Icon type="sync" onClick={this.getNewestPrice} />
                 </Col>
-                : <Col span={18} className="red--text">不可下单</Col>
+                : <Col span={18}>
+                  <span style={{ marginRight: 10 }} className="red--text">不可下单</span>
+                  <Icon type="sync" onClick={this.getNewestPrice} />
+                </Col>
               }
             </Row>
           </Form.Item>
