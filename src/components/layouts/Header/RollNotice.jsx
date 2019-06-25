@@ -49,9 +49,9 @@ class RollNotice extends Component {
       return <span key={i} style={{ marginRight: 20 }}>{i + 1}、{e}</span>
     })
     
-    // setTimeout(() => {
-    //   this.setAnimateConfig()
-    // }, 0)
+    setTimeout(() => {
+      this.setAnimateConfig()
+    }, 0)
 
     return (
       <div className="rollNotice-container">
