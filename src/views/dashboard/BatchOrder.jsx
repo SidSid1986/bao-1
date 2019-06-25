@@ -82,7 +82,7 @@ class BatchOrder extends Component {
     const { validateFields, resetFields } = this.props.form
     validateFields(async (err, values) => {
       if (!err) {
-        const data = values.data.replace(/\n/g, '').split(';').map(e => e.split('----'))
+        const data = values.data.replace(/\n/g, ';').split(';').map(e => e.split('----'))
         let bz, md, yd
         const { priceConfig } = this.props.global
         priceConfig.forEach(e => {
